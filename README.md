@@ -1,12 +1,12 @@
-# 📱 Interaktive 3D-Karte - Empanadas
+#  Interaktive 3D-Karte - Empanadas
 
 Eine interaktive elektronische Karte zur Förderung des Empanada-Verkaufsstands eines Freundes, mit modernem Design und digitalen Funktionen, um Kunden anzuziehen und zu informieren.
 
-## 📋 Beschreibung
+##  Beschreibung
 
 Dieses Projekt präsentiert eine interaktive 3D-Karte mit zwei Seiten (Vorder- und Rückseite), die in 3D-Rotation betrachtet werden können. Die Benutzeroberfläche ermöglicht es Kunden, das Menü auf immersive und moderne Weise zu konsultieren, mit der Möglichkeit, die Bilder für die Offline-Ansicht herunterzuladen.
 
-## ✨ Funktionen
+##  Funktionen
 
 - **Automatische 3D-Rotation**: Start-Animation mit 1,7 vollständigen Umdrehungen
 - **Touch- und Maus-Interaktion**: Ziehen Sie die Karte, um sie manuell zu drehen
@@ -15,7 +15,7 @@ Dieses Projekt präsentiert eine interaktive 3D-Karte mit zwei Seiten (Vorder- u
 - **Modernes Design**: Elegante Benutzeroberfläche mit subtilen Verläufen und flüssigen Animationen
 - **Responsive**: Kompatibel mit Desktop und Mobile
 
-## 🚀 Verwendung
+##  Verwendung
 
 ### Lokale Installation
 
@@ -31,7 +31,7 @@ Sie können dieses Projekt auf jeder statischen Hosting-Plattform hosten:
 - Vercel
 - Jeder klassische Webserver
 
-## 📁 Projektstruktur
+##  Projektstruktur
 
 ```
 CARTE/
@@ -41,7 +41,7 @@ CARTE/
 └── README.md       # Dokumentation
 ```
 
-## 🎨 Anpassung
+##  Anpassung
 
 ### Bilder ändern
 
@@ -69,14 +69,7 @@ background: linear-gradient(135deg, #ece9e6, #ffffff, #ffe5c5 80%);
 - Vanilla JavaScript (keine Frameworks)
 - Canvas API (für Bild-Downloads)
 
-## 📱 Kompatibilität
-
-- ✅ Chrome / Edge (neueste Versionen)
-- ✅ Firefox (neueste Versionen)
-- ✅ Safari (iOS und macOS)
-- ✅ Touch-Geräte (Smartphones, Tablets)
-
-## 💡 Anwendungsfälle
+##  Anwendungsfälle
 
 - Empanada-Stand auf einem Markt
 - Food Truck
@@ -84,10 +77,11 @@ background: linear-gradient(135deg, #ece9e6, #ffffff, #ffe5c5 80%);
 - Veranstaltungen und Festivals
 - Teilen in sozialen Medien
 
-## 🎯 Projektziel
+##  Projektziel
 
 Eine interaktive elektronische Karte zur Förderung des Empanada-Verkaufsstands eines Freundes, mit modernem Design und digitalen Funktionen, um Kunden anzuziehen und zu informieren.
 
 ---
 
-**Mit ❤️ entwickelt, um köstliche Empanadas zu fördern**
+
+
