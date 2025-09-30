@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Carte 3D Interactive Empanadas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ece9e6, #ffffff, #ffe5c5 80%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+    .scene {
+      width: 350px;
+      height: 220px;
+      perspective: 1000px;
+    }
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(.18,.89,.32,1.28);
+      cursor: grab;
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 24px;
+      box-shadow: 0 10px 28px 0 rgba(40, 36, 60, 0.2);
+      background: #fff8f0;
+      user-select: none;
+      pointer-events: none;
+    }
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px 0 rgba(40,36,60,0.08);
+      background: #fff8f0;
+    }
+    .face.back {
+      transform: rotateY(180deg);
+    }
+    /* Plein écran image */
+    .fullscreen-img {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(10,10,15,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn .2s;
+    }
+    .fullscreen-img img {
+      max-width: 95vw;
+      max-height: 95vh;
+      border-radius: 14px;
+      box-shadow: 0 4px 28px 0 rgba(10,10,10,0.3);
+    }
+    .close-btn {
+      position: fixed;
+      top: 20px; right: 30px;
+      font-size: 2.5rem;
+      color: #fff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1010;
+      filter: drop-shadow(0 0 5px #222);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    /* Style bouton téléchargement */
+    #downloadBothBtn {
+      margin:32px 0 0 0; 
+      font-size:1.1rem; 
+      border-radius:8px; 
+      padding:8px 18px; 
+      background:#ffe5c5; 
+      border:none; 
+      cursor:pointer; 
+      box-shadow:0 2px 8px #eed2b3;
+      transition: background 0.2s;
+    }
+    #downloadBothBtn:hover {
+      background: #ffd099;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" id="scene">
+    <div class="card" id="card">
+      <div class="face front">
+        <img src="carte1.jpg" alt="Face 1">
+      </div>
+      <div class="face back">
+        <img src="carte2.jpg" alt="Face 2">
+      </div>
+    </div>
+  </div>
+  <!-- BOUTON DE TÉLÉCHARGEMENT DES DEUX IMAGES -->
+  <button id="downloadBothBtn">Download</button>
+  
+  <script>
+    // Rotation carte 3D avec effet "multi rotation" au démarrage
+    const card = document.getElementById('card');
+    let dragging = false, startX = 0, rotateY = 0;
+
+    // ---- EFFET MULTI-ROTATION AU DEMARRAGE ----
+    let autoRotate = true;
+    let autoDeg = 0;
+    let totalRotations = 360 * 1.7; // 1,7 tours complets (ajuster ici pour plus/moins)
+    let duration = 800; // Durée totale de l'animation (en ms)
+    let startTime = null;
+
+    function animateRotation(ts) {
+      if (!startTime) startTime = ts;
+      let progress = (ts - startTime) / duration;
+      if (progress > 1) progress = 1;
+      autoDeg = progress * totalRotations;
+      card.style.transform = `rotateY(${autoDeg}deg)`;
+      if (progress < 1) {
+        requestAnimationFrame(animateRotation);
+      } else {
+        autoRotate = false;
+        rotateY = autoDeg % 360;
+      }
+    }
+    requestAnimationFrame(animateRotation);
+
+    function setCardRotation() {
+      card.style.transform = `rotateY(${rotateY}deg)`;
+    }
+
+    // Souris (desktop)
+    card.addEventListener('mousedown', (e) => {
+      if (autoRotate) return;
+      dragging = true;
+      startX = e.pageX;
+      card.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mouseup', () => {
+      dragging = false;
+      card.style.cursor = 'grab';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging || autoRotate) return;
+      let delta = e.pageX - startX;
+      rotateY += delta * 0.6;
+      startX = e.pageX;
+      setCardRotation();
+    });
+
+    // Touch (mobile)
+    card.addEventListener('touchstart', (e) => {
+      if (autoRotate) return;
+      dragging = true;
+      startX = e.touches[0].clientX;
+    });
+    card.addEventListener('touchend', () => {
+      dragging = false;
+    });
+    card.addEventListener('touchmove', (e) => {
+      if (!dragging || autoRotate) return;
+      let delta = e.touches[0].clientX - startX;
+      rotateY += delta * 0.6;
+      startX = e.touches[0].clientX;
+      setCardRotation();
+    });
+
+    // Affichage plein écran au clic/tap sur une face
+    document.querySelectorAll('.face').forEach(face => {
+      face.addEventListener('click', (e) => {
+        let imgSrc = face.querySelector('img').src;
+        let fs = document.createElement('div');
+        fs.className = 'fullscreen-img';
+        let img = document.createElement('img');
+        img.src = imgSrc;
+        fs.appendChild(img);
+        let btn = document.createElement('button');
+        btn.innerHTML = '×';
+        btn.className = 'close-btn';
+        btn.onclick = () => document.body.removeChild(fs);
+        fs.appendChild(btn);
+        fs.onclick = (ev) => { if(ev.target===fs) document.body.removeChild(fs);}
+        document.body.appendChild(fs);
+      });
+    });
+
+    // ------- BOUTON DOWNLOAD POUR LES DEUX IMAGES EN PNG -------
+    function downloadImageFromImg(imgSelector, fileName) {
+      const img = document.querySelector(imgSelector);
+      if (!img) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(function(blob) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        }, 100);
+      }, 'image/png');
+    }
+
+    document.getElementById('downloadBothBtn').addEventListener('click', function() {
+      // Face avant
+      downloadImageFromImg('.face.front img', 'carte-face1.png');
+      // Face arrière (petite pause pour éviter conflit de téléchargements)
+      setTimeout(() => {
+        downloadImageFromImg('.face.back img', 'carte-face2.png');
+      }, 400);
+    });
+  </script>
+</body>
+</html>
